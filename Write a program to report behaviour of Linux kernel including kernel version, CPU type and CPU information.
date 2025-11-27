@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    FILE *fp;
+    char line[256];
+
+    // Kernel version
+    fp = fopen("/proc/version", "r");
+    if (fp == NULL) {
+        perror("Error opening /proc/version");
+        return 1;
+    }
+    printf("Linux Kernel Version:\n");
+    if (fgets(line, sizeof(line), fp)) {
+        printf("%s\n", line);
+    }
+    fclose(fp);
+
+    // CPU information
+    fp = fopen("/proc/cpuinfo", "r");
+    if (fp == NULL) {
+        perror("Error opening /proc/cpuinfo");
+        return 1;
+    }
+    printf("\nCPU Information:\n");
+    while (fgets(line, sizeof(line), fp)) {
+        if (strncmp(line, "model name", 10) == 0 ||
+            strncmp(line, "cpu cores", 9) == 0 ||
+            strncmp(line, "vendor_id", 9) == 0) {
+            printf("%s", line);
+        }
+    }
+    fclose(fp);
+
+    return 0;
+}
