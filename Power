@@ -1,0 +1,13 @@
+%RULES
+power(_,0,1).
+
+%recursion
+power(Num,Pow,Ans):-
+    Pow>0,
+    Pow1 is Pow-1,
+    power(Num,Pow1,Ans1),
+    Ans is Num * Ans1.
+
+OUTPUT
+power(2,2,RESULT).
+RESULT = 4
