@@ -1,0 +1,13 @@
+%base
+memb(X,[X|_]).
+
+%Recursive
+memb(X,[_|T]):-
+    memb(X, T).
+    return 0;
+}
+
+
+outpput
+memb(3,[4,3 ,5, 6]).
+1true
