@@ -1,0 +1,18 @@
+%base
+evenlength([]).
+
+%recursive
+evenlength([_,_|Tail]):-
+    evenlength(Tail).
+
+%base
+oddlength([]).
+
+%recursive
+oddlength([_,_|Tail]):-
+    evenlength(Tail).
+
+
+output
+evenlength([4,3 ,5, 6]).
+1true
