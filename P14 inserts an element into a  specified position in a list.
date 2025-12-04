@@ -1,0 +1,13 @@
+%Base
+insert(I,1,L,[I|L]).
+
+%RECURSIVE
+insert(I,N,[Head|Tail],[Head|R]):-
+    N > 1,
+    N1 is N -1,
+    insert(I,N1,Tail,R).
+
+
+output
+insert(3,1,[4,3 ,5, 6],R).
+R = [3, 4, 3, 5, 6]
