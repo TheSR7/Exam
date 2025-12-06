@@ -1,0 +1,183 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node *left;
+    Node *right;
+};
+
+class BST {
+private:
+    Node *root;
+
+public:
+    BST() { root = NULL; }
+
+    void Insert(int x);
+    void Delete(int x);
+    Node* Search(int x);
+    void Inorder();
+    void Preorder();
+    void Postorder();
+
+private:
+    Node* Insert(Node *p, int x);
+    Node* Delete(Node *p, int x);
+    Node* Search(Node *p, int x);
+    void Inorder(Node *p);
+    void Preorder(Node *p);
+    void Postorder(Node *p);
+    Node* FindMin(Node *p);
+};
+
+void BST::Insert(int x) {
+    root = Insert(root, x);
+}
+
+Node* BST::Insert(Node *p, int x) {
+    if (p == NULL) {
+        p = new Node;
+        p->data = x;
+        p->left = p->right = NULL;
+    } else if (x < p->data)
+        p->left = Insert(p->left, x);
+    else if (x > p->data)
+        p->right = Insert(p->right, x);
+    return p;
+}
+
+void BST::Delete(int x) {
+    root = Delete(root, x);
+}
+
+Node* BST::Delete(Node *p, int x) {
+    if (p == NULL) return NULL;
+
+    if (x < p->data)
+        p->left = Delete(p->left, x);
+    else if (x > p->data)
+        p->right = Delete(p->right, x);
+    else {
+        if (p->left == NULL && p->right == NULL) {
+            delete p;
+            return NULL;
+        } else if (p->left == NULL) {
+            Node *temp = p->right;
+            delete p;
+            return temp;
+        } else if (p->right == NULL) {
+            Node *temp = p->left;
+            delete p;
+            return temp;
+        } else {
+            Node *temp = FindMin(p->right);
+            p->data = temp->data;
+            p->right = Delete(p->right, temp->data);
+        }
+    }
+    return p;
+}
+
+Node* BST::FindMin(Node *p) {
+    while (p && p->left)
+        p = p->left;
+    return p;
+}
+
+Node* BST::Search(int x) {
+    return Search(root, x);
+}
+
+Node* BST::Search(Node *p, int x) {
+    while (p) {
+        if (x == p->data) {
+            cout << "Found: " << p->data << endl;
+            return p;
+        } else if (x < p->data)
+            p = p->left;
+        else
+            p = p->right;
+    }
+    cout << "Not found" << endl;
+    return NULL;
+}
+
+void BST::Inorder() {
+    Inorder(root);
+    cout << endl;
+}
+
+void BST::Inorder(Node *p) {
+    if (p) {
+        Inorder(p->left);
+        cout << p->data << " ";
+        Inorder(p->right);
+    }
+}
+
+void BST::Preorder() {
+    Preorder(root);
+    cout << endl;
+}
+
+void BST::Preorder(Node *p) {
+    if (p) {
+        cout << p->data << " ";
+        Preorder(p->left);
+        Preorder(p->right);
+    }
+}
+
+void BST::Postorder() {
+    Postorder(root);
+    cout << endl;
+}
+
+void BST::Postorder(Node *p) {
+    if (p) {
+        Postorder(p->left);
+        Postorder(p->right);
+        cout << p->data << " ";
+    }
+}
+
+int main() {
+    BST tree;
+
+    tree.Insert(50);
+    tree.Insert(30);
+    tree.Insert(70);
+    tree.Insert(20);
+    tree.Insert(40);
+    tree.Insert(60);
+    tree.Insert(80);
+
+    cout << "Inorder: ";
+    tree.Inorder();
+
+    cout << "Preorder: ";
+    tree.Preorder();
+
+    cout << "Postorder: ";
+    tree.Postorder();
+
+    tree.Search(40);
+    tree.Delete(30);
+
+    cout << "After deleting 30, Inorder: ";
+    tree.Inorder();
+
+    return 0;
+}
+
+output
+Inorder: 20 30 40 50 60 70 80 
+Preorder: 50 30 20 40 70 60 80 
+Postorder: 20 40 30 60 80 70 50 
+Found: 40
+After deleting 30, Inorder: 20 40 50 60 70 80 
+
+
+=== Code Execution Successful ===
