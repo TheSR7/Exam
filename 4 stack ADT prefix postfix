@@ -1,0 +1,101 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class Stack {
+private:
+    int top;
+    int size;
+    int *S;
+
+public:
+    Stack(int sz) {
+        size = sz;
+        top = -1;
+        S = new int[size];
+    }
+
+    ~Stack() {
+        delete[] S;
+    }
+
+    void Push(int x);
+    int Pop();
+    bool isEmpty();
+};
+
+void Stack::Push(int x) {
+    if (top == size - 1)
+        cout << "Stack Overflow" << endl;
+    else
+        S[++top] = x;
+}
+
+int Stack::Pop() {
+    if (top == -1) {
+        cout << "Stack Underflow" << endl;
+        return -1;
+    } else
+        return S[top--];
+}
+
+bool Stack::isEmpty() {
+    return top == -1;
+}
+
+int EvaluatePostfix(const char *exp) {
+    Stack st(strlen(exp));
+    for (int i = 0; exp[i]; i++) {
+        if (isdigit(exp[i])) {
+            st.Push(exp[i] - '0');
+        } else {
+            int b = st.Pop();
+            int a = st.Pop();
+            switch (exp[i]) {
+                case '+': st.Push(a + b); break;
+                case '-': st.Push(a - b); break;
+                case '*': st.Push(a * b); break;
+                case '/': st.Push(a / b); break;
+            }
+        }
+    }
+    return st.Pop();
+}
+
+int EvaluatePrefix(const char *exp) {
+    Stack st(strlen(exp));
+    for (int i = strlen(exp) - 1; i >= 0; i--) {
+        if (isdigit(exp[i])) {
+            st.Push(exp[i] - '0');
+        } else {
+            int a = st.Pop();
+            int b = st.Pop();
+            switch (exp[i]) {
+                case '+': st.Push(a + b); break;
+                case '-': st.Push(a - b); break;
+                case '*': st.Push(a * b); break;
+                case '/': st.Push(a / b); break;
+            }
+        }
+    }
+    return st.Pop();
+}
+
+int main() {
+    const char *postfix = "234*+";
+    const char *prefix = "+2*34";
+
+    cout << "Postfix Expression: " << postfix << endl;
+    cout << "Postfix Evaluation: " << EvaluatePostfix(postfix) << endl;
+
+    cout << "Prefix Expression: " << prefix << endl;
+    cout << "Prefix Evaluation: " << EvaluatePrefix(prefix) << endl;
+
+    return 0;
+}
+output
+Postfix Expression: 234*+
+Postfix Evaluation: 14
+Prefix Expression: +2*34
+Prefix Evaluation: 14
+
