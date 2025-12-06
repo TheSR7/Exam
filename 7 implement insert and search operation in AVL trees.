@@ -1,0 +1,112 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data, height;
+    Node *left, *right;
+    Node(int val) {
+        data = val;
+        height = 1;
+        left = right = NULL;
+    }
+};
+
+int height(Node* p) {
+    return p ? p->height : 0;
+}
+
+int balance(Node* p) {
+    return height(p->left) - height(p->right);
+}
+
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+Node* rightRotate(Node* y) {
+    Node* x = y->left;
+    y->left = x->right;
+    x->right = y;
+    y->height = max(height(y->left), height(y->right)) + 1;
+    x->height = max(height(x->left), height(x->right)) + 1;
+    return x;
+}
+
+Node* leftRotate(Node* x) {
+    Node* y = x->right;
+    x->right = y->left;
+    y->left = x;
+    x->height = max(height(x->left), height(x->right)) + 1;
+    y->height = max(height(y->left), height(y->right)) + 1;
+    return y;
+}
+
+Node* insert(Node* root, int key) {
+    if (!root) return new Node(key);
+    if (key < root->data) root->left = insert(root->left, key);
+    else if (key > root->data) root->right = insert(root->right, key);
+    else return root;
+
+    root->height = max(height(root->left), height(root->right)) + 1;
+    int bf = balance(root);
+
+    if (bf > 1 && key < root->left->data) return rightRotate(root);
+    if (bf < -1 && key > root->right->data) return leftRotate(root);
+    if (bf > 1 && key > root->left->data) {
+        root->left = leftRotate(root->left);
+        return rightRotate(root);
+    }
+    if (bf < -1 && key < root->right->data) {
+        root->right = rightRotate(root->right);
+        return leftRotate(root);
+    }
+
+    return root;
+}
+
+Node* search(Node* root, int key) {
+    while (root) {
+        if (key == root->data) {
+            cout << "Found: " << key << endl;
+            return root;
+        }
+        root = (key < root->data) ? root->left : root->right;
+    }
+    cout << "Not found" << endl;
+    return NULL;
+}
+
+void inorder(Node* root) {
+    if (root) {
+        inorder(root->left);
+        cout << root->data << " ";
+        inorder(root->right);
+    }
+}
+
+int main() {
+    Node* root = NULL;
+    root = insert(root, 30);
+    root = insert(root, 20);
+    root = insert(root, 40);
+    root = insert(root, 10);
+    root = insert(root, 25);
+
+    cout << "Inorder: ";
+    inorder(root);
+    cout << endl;
+
+    search(root, 25);
+    search(root, 50);
+
+    return 0;
+}
+
+output
+Inorder: 10 20 25 30 40 
+Found: 25
+Not found
+
+
+=== Code Execution Successful ===
