@@ -1,0 +1,74 @@
+INPUT
+
+#include <iostream>
+using namespace std;
+
+int comparisons = 0; 
+
+// (1-based indexing)
+void heapify(int arr[], int n, int i) {
+    int largest = i;       
+    int left = 2 * i;     
+    int right = 2 * i + 1; 
+
+    // Compare left child
+    if (left <= n) {
+        comparisons++;
+        if (arr[left] > arr[largest])
+            largest = left;
+    }
+
+    // Compare right child
+    if (right <= n) {
+        comparisons++;
+        if (arr[right] > arr[largest])
+            largest = right;
+    }
+
+    // If largest is not root
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+
+
+void heapSort(int arr[], int n) {
+    // Build max heap
+    for (int i = n / 2; i >= 1; i--)
+        heapify(arr, n, i);
+
+    // Extract elements one by one
+    for (int i = n; i > 1; i--) {
+        swap(arr[1], arr[i]); 
+        heapify(arr, i - 1, 1);   
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    int arr[n + 1]; // +1 because we are using 1-based indexing
+    cout << "Enter elements: ";
+    for (int i = 1; i <= n; i++)
+        cin >> arr[i];
+
+    heapSort(arr, n);
+
+    cout << "Sorted array: ";
+    for (int i = 1; i <= n; i++)
+        cout << arr[i] << " ";
+    cout << endl;
+
+    cout << "Total comparisons: " << comparisons << endl;
+
+    return 0;
+}
+
+OUTPUT
+Enter number of elements: 3
+Enter elements: 4 3 6
+Sorted array: 3 4 6 
+Total comparisons: 3
