@@ -1,0 +1,58 @@
+INPUT
+
+#include <iostream>
+using namespace std;
+
+void countSort(int arr[], int n) {
+    // Find the maximum element
+    int maxVal = arr[0];
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > maxVal)
+            maxVal = arr[i];
+    }
+
+    // Create count array
+    int count[maxVal + 1] = {0};
+
+    // Store the count of each element
+    for (int i = 0; i < n; i++) {
+        count[arr[i]]++;
+    }
+
+    // Build the sorted array
+    int index = 0;
+    for (int i = 0; i <= maxVal; i++) {
+        while (count[i] > 0) {
+            arr[index++] = i;
+            count[i]--;
+        }
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    int arr[n];
+    cout << "Enter elements (non-negative integers): ";
+    for (int i = 0; i < n; i++)
+        cin >> arr[i];
+
+    countSort(arr, n);
+
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++)
+        cout << arr[i] << " ";
+    cout << endl;
+
+    return 0;
+}
+
+
+OUTPUT
+Enter number of elements: 4
+Enter elements (non-negative integers): 33 4 67
+21
+
+Sorted array: 4 21 33 67 
